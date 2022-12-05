@@ -3,7 +3,6 @@ import mongoose, { HydratedDocument } from 'mongoose';
 
 import { Item, itemSchema } from './item';
 import { User } from 'src/users/schemas/User';
-import IShoppingList from '../interfaces/shopping-list';
 
 export type ShoppingListDocument = HydratedDocument<ShoppingList>;
 

@@ -8,8 +8,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ShoppingList, shoppingListSchema } from './schemas/shoppingList';
 import { ShoppingListController } from './shoppingList.controller';
 import { ShoppingListService } from './shoppingList.service';
-import { AuthMiddleware } from 'src/middleware/authMiddleware';
-import { OwnerMiddleware } from 'src/middleware/ownerMiddleware';
+import { ResponseService } from './response.service';
+import { AuthMiddleware } from 'src/middleware/AuthMiddleware';
+import { OwnerMiddleware } from 'src/middleware/OwnerMiddleware';
 import { OwnerOrEditorMiddleware } from 'src/middleware/OwnerOrEditorMiddleware';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -20,7 +21,7 @@ import { JwtModule } from '@nestjs/jwt';
     ]),
     JwtModule.register({ secret: 'sdcvdfvfd' }),
   ],
-  providers: [ShoppingListService],
+  providers: [ShoppingListService, ResponseService],
   controllers: [ShoppingListController],
 })
 export class ShoppinglistModule implements NestModule {
@@ -29,27 +30,31 @@ export class ShoppinglistModule implements NestModule {
       .apply(AuthMiddleware)
       .forRoutes(
         { path: '/shoppinglist', method: RequestMethod.POST },
-        { path: '/shoppinglist/', method: RequestMethod.GET },
+        { path: '/shoppinglist', method: RequestMethod.GET },
       );
     consumer.apply(AuthMiddleware, OwnerMiddleware).forRoutes(
-      { path: '/shoppinglist/:id', method: RequestMethod.PUT },
-      { path: '/shoppinglist/:id', method: RequestMethod.DELETE },
-      { path: '/shoppinglist/:id/editor', method: RequestMethod.POST },
+      { path: '/shoppinglist/:listId', method: RequestMethod.PUT },
+      { path: '/shoppinglist/:listId', method: RequestMethod.DELETE },
+      { path: '/shoppinglist/:listId/editor', method: RequestMethod.POST },
       {
-        path: '/shoppinglist/:id/editor/:editorid',
+        path: '/shoppinglist/:id/editor/:editorId',
         method: RequestMethod.DELETE,
       },
     );
     consumer.apply(AuthMiddleware, OwnerOrEditorMiddleware).forRoutes(
-      { path: '/shoppinglist/:id', method: RequestMethod.GET },
-      { path: '/shoppinglist/:id/item', method: RequestMethod.POST },
-      { path: '/shoppinglist/:id/item', method: RequestMethod.PUT },
+      { path: '/shoppinglist/:listId', method: RequestMethod.GET },
+      { path: '/shoppinglist/:listId/item', method: RequestMethod.POST },
+      { path: '/shoppinglist/:listId/item/itemid', method: RequestMethod.PUT },
       {
-        path: '/shoppinglist/:id/item/:itemid',
+        path: '/shoppinglist/:ListId/item/:itemid',
         method: RequestMethod.DELETE,
       },
       {
         path: '/shoppinglist/:id/item/:itemid/check',
+        method: RequestMethod.GET,
+      },
+      {
+        path: '/shoppinglist/:id/item/:itemid/uncheck',
         method: RequestMethod.GET,
       },
     );

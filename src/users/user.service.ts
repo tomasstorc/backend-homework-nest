@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDocument, User } from './schemas/User';
-import jwt from 'jsonwebtoken';
+
 import IUser from './interfaces/user';
 import { hashSync, compareSync } from 'bcrypt';
 import passwordValidator from 'password-validator';

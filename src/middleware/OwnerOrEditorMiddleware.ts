@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Request, Response, NextFunction } from 'express';
 
 import { CallbackError, Model } from 'mongoose';
+import { ResponseService } from 'src/shoppinglist/response.service';
 import {
   ShoppingList,
   ShoppingListDocument,
@@ -13,6 +14,7 @@ export class OwnerOrEditorMiddleware implements NestMiddleware {
   constructor(
     @InjectModel(ShoppingList.name)
     private shoppingListModel: Model<ShoppingListDocument>,
+    private responseService: ResponseService,
   ) {}
   use(req: Request, res: Response, next: NextFunction) {
     const userId = req.user?.user._id;
@@ -20,20 +22,19 @@ export class OwnerOrEditorMiddleware implements NestMiddleware {
       { _id: req.params.id },
       (err: CallbackError | undefined, list: ShoppingListDocument) => {
         if (err) {
-          return res.status(403).json({ status: 'error', error: err });
+          return res.status(403).json(this.responseService.errorResponse(err));
         }
         if (!list) {
           return res
             .status(404)
-            .json({ status: 'error', error: 'no list found' });
+            .json(this.responseService.errorResponse('no list found'));
         }
-        if (list.owner === userId || list.editors.includes(userId)) {
+        if (list.owner.toString() === userId || list.editors.includes(userId)) {
           next();
         } else {
-          return res.status(403).json({
-            status: 'error',
-            error: 'you are not allowed for requested operation',
-          });
+          return res
+            .status(403)
+            .json(this.responseService.errorResponse('unauthorized'));
         }
       },
     );

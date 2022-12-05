@@ -1,0 +1,346 @@
+openapi: '3.0.0'
+info:
+  title: 'Shopping list API documentation'
+  description: 'Documentation for shopping list API unicorn university homework'
+  version: '1.0'
+paths:
+  '/shoppinglist':
+    summary: 'path to get and create shopping list'
+    parameters:
+      - name: 'Auth token'
+        description: 'jwt auth token'
+        required: true
+        in: 'header'
+        schema:
+          type: 'string'
+    get:
+      summary: 'path to get all shopping lists for logged user'
+
+      responses:
+        '200':
+          description: 'success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized request'
+    post:
+      summary: 'create new shopping list'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shoppinglist'
+      responses:
+        '201':
+          description: 'list created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized request'
+  '/shoppinglist/{listId}':
+    summary: 'operations on existing shopping lists'
+    parameters:
+      - name: 'Auth token'
+        in: header
+        description: 'jwt auth token'
+        required: true
+        schema:
+          type: string
+      - name: listid
+        in: query
+        description: 'id of shopping list'
+        required: true
+        schema:
+          type: string
+    get:
+      summary: 'get shopping list by id'
+      responses:
+        '200':
+          description: 'Shopping list found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized'
+    delete:
+      summary: 'delete shopping list'
+      responses:
+        '204':
+          description: 'Shopping list deleted'
+        '403':
+          description: 'unauthorized'
+    put:
+      summary: 'Update shopping list'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shoppinglist'
+      responses:
+        '200':
+          description: 'Shopping list updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized'
+  '/shoppinglist/{listId}/item':
+    summary: 'route for adding item to shopping list'
+    parameters:
+      - name: 'Auth token'
+        in: header
+        description: 'jwt auth token'
+        required: true
+        schema:
+          type: string
+      - name: listId
+        in: query
+        description: 'id of shopping list'
+        required: true
+        schema:
+          type: string
+    post:
+      summary: 'add item to shopping list'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postItem'
+      responses:
+        '200':
+          description: 'item sdded'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+  '/shoppinglist/{listId}/item/{itemid}':
+    description: 'route for manipulation with existing items in shopping list'
+    parameters:
+      - name: itemid
+        in: query
+        description: 'id of item'
+        required: true
+        schema:
+          type: string
+      - name: listId
+        in: query
+        description: 'id of shopping list'
+        required: true
+        schema:
+          type: string
+      - name: 'Auth token'
+        in: header
+        description: 'jwt auth token'
+        required: true
+        schema:
+          type: string
+    delete:
+      summary: 'delete item from shopping list'
+      responses:
+        '200':
+          description: 'Item deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized'
+    put:
+      summary: 'update item in shopping list'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postItem'
+      responses:
+        '200':
+          description: 'item updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized'
+  '/shoppinglist/{listId}/editor':
+    summary: 'route for adding editor to list'
+    parameters:
+      - name: listId
+        in: query
+        description: 'id of shopping list'
+        required: true
+        schema:
+          type: string
+      - name: 'Auth token'
+        in: header
+        description: 'jwt auth token'
+        required: true
+        schema:
+          type: string
+    post:
+      summary: 'add editor'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                editorId:
+                  type: string
+                  description: 'id of editor'
+      responses:
+        '200':
+          description: 'editor added'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized'
+  '/shoppinglist/{listId}/editor/{editorId}':
+    summary: 'route for deleting editor from list'
+    parameters:
+      - name: listId
+        in: query
+        description: 'id of shopping list'
+        required: true
+        schema:
+          type: string
+      - name: 'Auth token'
+        in: header
+        description: 'jwt auth token'
+        required: true
+        schema:
+          type: string
+      - name: editorId
+        in: query
+        description: 'id of editor'
+        required: true
+        schema:
+          type: string
+    delete:
+      summary: 'delete editor'
+      responses:
+        '200':
+          description: :editor deleted"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized'
+  '/shoppinglist/{listId}/item/{itemId}/check':
+    summary: 'route to check item'
+    parameters:
+      - name: itemid
+        in: query
+        description: 'id of item'
+        required: true
+        schema:
+          type: string
+      - name: listId
+        in: query
+        description: 'id of shopping list'
+        required: true
+        schema:
+          type: string
+      - name: 'Auth token'
+        in: header
+        description: 'jwt auth token'
+        required: true
+        schema:
+          type: string
+    get:
+      summary: 'check item'
+      responses:
+        '200':
+          description: 'item checked'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized'
+  '/shoppinglist/{listId}/item/{itemId}/uncheck':
+    summary: 'route to uncheck item'
+    parameters:
+      - name: itemid
+        in: query
+        description: 'id of item'
+        required: true
+        schema:
+          type: string
+      - name: listId
+        in: query
+        description: 'id of shopping list'
+        required: true
+        schema:
+          type: string
+      - name: 'Auth token'
+        in: header
+        description: 'jwt auth token'
+        required: true
+        schema:
+          type: string
+    get:
+      summary: 'uncheck item'
+      responses:
+        '200':
+          description: 'item unchecked'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shoppinglist'
+        '403':
+          description: 'unauthorized'
+components:
+  schemas:
+    shoppinglist:
+      type: object
+      properties:
+        id:
+          type: 'string'
+          description: ' id of list'
+        name:
+          type: 'string'
+          description: 'name of the list'
+        items:
+          $ref: '#/components/schemas/items'
+        owner:
+          type: 'string'
+          description: 'id of user who created list'
+        editors:
+          type: array
+          description: 'list of ids of users who are editors for shopping list'
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 'id of item'
+        name:
+          type: string
+          description: 'name of the item'
+        done:
+          type: boolean
+          description: 'status of item'
+        quantity:
+          type: number
+          description: 'amount of item'
+    postItem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'name of the item'
+        checked:
+          type: boolean
+          description: 'status of item'
+        quantity:
+          type: number
+          description: 'amount of item'
