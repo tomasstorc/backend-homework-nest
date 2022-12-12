@@ -41,8 +41,12 @@ export class ShoppingListService {
     }
   }
   async deleteListById(listid: mongoose.Types.ObjectId) {
+    console.log(listid);
+
     try {
-      return this.shoppingListModel.findByIdAndDelete(listid);
+      return this.shoppingListModel.findOneAndDelete({
+        _id: listid,
+      });
     } catch (err) {
       return { status: 'error', err };
     }
@@ -119,7 +123,7 @@ export class ShoppingListService {
   async addEditorToList(listId: mongoose.Types.ObjectId, editorId: any) {
     try {
       return this.shoppingListModel.findByIdAndUpdate(listId, {
-        $push: { editors: editorId },
+        $push: { editors: new mongoose.Types.ObjectId(editorId) },
       });
     } catch (err) {
       return { status: 'error', err };

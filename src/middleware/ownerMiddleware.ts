@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Request, Response, NextFunction } from 'express';
 
 import { CallbackError, Model } from 'mongoose';
-import { ResponseService } from 'src/shoppinglist/response.service';
+import { ResponseService } from '../shoppinglist/response.service';
 import {
   ShoppingList,
   ShoppingListDocument,
-} from 'src/shoppinglist/schemas/shoppingList';
+} from '../shoppinglist/schemas/shoppingList';
 
 @Injectable()
 export class OwnerMiddleware implements NestMiddleware {
@@ -18,12 +18,14 @@ export class OwnerMiddleware implements NestMiddleware {
   ) {}
   use(req: Request, res: Response, next: NextFunction) {
     const userId = req.user?.user._id;
+
     this.shoppingListModel.findOne(
-      { _id: req.params.id },
+      { _id: req.params.listId },
       (err: CallbackError | undefined, list: ShoppingListDocument) => {
         if (err) {
           return res.status(400).json(this.responseService.errorResponse(err));
         }
+
         if (!list) {
           return res
             .status(404)

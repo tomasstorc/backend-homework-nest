@@ -9,9 +9,9 @@ import { ShoppingList, shoppingListSchema } from './schemas/shoppingList';
 import { ShoppingListController } from './shoppingList.controller';
 import { ShoppingListService } from './shoppingList.service';
 import { ResponseService } from './response.service';
-import { AuthMiddleware } from 'src/middleware/AuthMiddleware';
-import { OwnerMiddleware } from 'src/middleware/OwnerMiddleware';
-import { OwnerOrEditorMiddleware } from 'src/middleware/OwnerOrEditorMiddleware';
+import { AuthMiddleware } from '../middleware/AuthMiddleware';
+import { OwnerMiddleware } from '../middleware/OwnerMiddleware';
+import { OwnerOrEditorMiddleware } from '../middleware/OwnerOrEditorMiddleware';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({

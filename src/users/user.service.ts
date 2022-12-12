@@ -52,8 +52,6 @@ export class UserService {
       const doesMatch = compareSync(userDto.password, user.password);
 
       if (doesMatch) {
-        console.log(user);
-
         const token = this.jwtService.sign({ user });
         return token;
       } else {

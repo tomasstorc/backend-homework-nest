@@ -26,11 +26,13 @@ export class ShoppingListController {
     const createdList = await this.shoppingListService.create(createListDto);
     return this.responseService.successResponse('created', createdList);
   }
+  @HttpCode(200)
   @Get()
   async getAllById() {
     const lists = await this.shoppingListService.getListByOwnerId();
     return this.responseService.successResponse('success', lists);
   }
+  @HttpCode(200)
   @Get(':id')
   async getListById(@Param() params) {
     const list: any = await this.shoppingListService.getListById(params.id);
@@ -136,7 +138,7 @@ export class ShoppingListController {
   async addEditorToList(@Param() params, @Body() editorId: AddEditorDto) {
     const updatedList: any = await this.shoppingListService.addEditorToList(
       params.listId,
-      editorId,
+      editorId.editorId,
     );
     if (updatedList.status === 'error') {
       return this.responseService.errorResponse(updatedList?.err);

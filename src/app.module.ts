@@ -9,7 +9,11 @@ import { ShoppinglistModule } from './shoppinglist/shoppinglist.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.DB_URL),
+    MongooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: process.env.DB_URL,
+      }),
+    }),
     UsersModule,
     ShoppinglistModule,
     UsersModule,
@@ -17,8 +21,4 @@ import { ShoppinglistModule } from './shoppinglist/shoppinglist.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply();
-  }
-}
+export class AppModule {}
