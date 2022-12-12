@@ -41,8 +41,6 @@ export class ShoppingListService {
     }
   }
   async deleteListById(listid: mongoose.Types.ObjectId) {
-    console.log(listid);
-
     try {
       return this.shoppingListModel.findOneAndDelete({
         _id: listid,
